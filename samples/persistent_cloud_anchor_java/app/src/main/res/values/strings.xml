@@ -15,8 +15,17 @@
    limitations under the License.
 -->
 <resources>
+  <string name="app_name">GeoSplat</string>
+  <string name="random_desc">Description</string>
+  <string name="search">Search</string>
+  <string name="username">User Name</string>
+  <string name="coin_count">9999</string>
+
+  <string name="run_name">Sample Run</string>
+  <string name="run_desc">Run Description</string>
+
+  <string name="start">Start Hunt</string>
   <!-- Strings in the main lobby activity -->
-  <string name="app_name">Persistent Cloud Anchor Sample</string>
   <string name="cancel">Cancel</string>
   <string name="host_button_text">Begin hosting</string>
   <string name="host_title_text">Host a Cloud Anchor</string>

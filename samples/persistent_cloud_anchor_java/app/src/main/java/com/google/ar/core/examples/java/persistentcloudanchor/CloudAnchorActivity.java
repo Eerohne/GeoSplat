@@ -103,7 +103,7 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
   private int mHeight;
   private boolean capturePicture = false;
 
-  static Intent newHostingIntent(Context packageContext) {
+  public static Intent newHostingIntent(Context packageContext) {
     Intent intent = new Intent(packageContext, CloudAnchorActivity.class);
     intent.putExtra(EXTRA_HOSTING_MODE, true);
     return intent;
