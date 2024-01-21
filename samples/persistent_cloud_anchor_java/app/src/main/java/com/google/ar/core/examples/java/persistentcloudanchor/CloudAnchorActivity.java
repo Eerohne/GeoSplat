@@ -116,6 +116,14 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
     intent.putExtra(EXTRA_ANCHORS_TO_RESOLVE, anchorsToResolve);
     return intent;
   }
+  public static Intent newResolvingIntent(Context packageContext, String idString, boolean dummy) {
+    ArrayList<String> arry = new ArrayList<>();
+    arry.add(idString);
+    Intent intent = new Intent(packageContext, CloudAnchorActivity.class);
+    intent.putExtra(EXTRA_HOSTING_MODE, false);
+    intent.putExtra(EXTRA_ANCHORS_TO_RESOLVE, arry);
+    return intent;
+  }
 
   private enum HostResolveMode {
     NONE,

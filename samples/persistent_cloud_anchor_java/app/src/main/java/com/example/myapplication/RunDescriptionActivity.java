@@ -50,7 +50,7 @@ public class RunDescriptionActivity extends AppCompatActivity {
         gameStartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = CloudAnchorActivity.newResolvingIntent(RunDescriptionActivity.this, (ArrayList<String>) Collections.singletonList(demo.id));
+                Intent intent = CloudAnchorActivity.newResolvingIntent(RunDescriptionActivity.this, demo.id, true);
                 startActivity(intent);
             }
         });
