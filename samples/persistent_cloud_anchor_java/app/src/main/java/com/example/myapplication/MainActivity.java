@@ -72,6 +72,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        RunAdapter runAdapter = new RunAdapter(this, runArrayList);
+        runCardPanel.setAdapter(runAdapter);
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         storeSaveFile();

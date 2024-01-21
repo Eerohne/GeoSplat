@@ -28,7 +28,7 @@
             android:padding="5dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/sloth"
+            android:src="@drawable/sloth2"
             />
 
         <!-- Text View to display Run Name -->
