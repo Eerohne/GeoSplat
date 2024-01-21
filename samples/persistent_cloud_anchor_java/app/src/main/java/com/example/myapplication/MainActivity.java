@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 
 import com.example.myapplication.structures.runs.Run;
 import com.example.myapplication.structures.runs.SimpleRun;
@@ -21,7 +20,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         // Test the pane
         runArrayList = new ArrayList<>();
         loadSaveFile();
-        runArrayList.add(new SimpleRun("JMSB Hunt" + new Random().nextInt(), "Roam Concordia and discover its amazing campuses", 0));
+        //runArrayList.add(new SimpleRun("JMSB Hunt" + new Random().nextInt(), "Roam Concordia and discover its amazing campuses", 0));
         //runArrayList.add(new SimpleRun("Hall Hunt", "Roam Concordia and discover its amazing campuses", 0));
         //runArrayList.add(new SimpleRun("McGill Hunt", "Roam McGill and discover its amazing campuses", 0));
         //runArrayList.add(new SimpleRun("UdeM Hunt", "Roam UdeM and discover its amazing campuses", 0));
@@ -55,6 +53,18 @@ public class MainActivity extends AppCompatActivity {
         runCardPanel.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         runCardPanel.setAdapter(runAdapter);
 
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        storeSaveFile();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         storeSaveFile();
     }
 
@@ -91,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
     public void storeSaveFile()
     {
         String convertedData = new Gson().toJson(runArrayList); // converted to string.
-
         SharedPreferences userDetails = this.getSharedPreferences("runDetails", MODE_PRIVATE);
         SharedPreferences.Editor edit = userDetails.edit();
 
@@ -105,11 +114,32 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPref = context.getSharedPreferences("runDetails", Context.MODE_PRIVATE);
         String GsonSaveString = sharedPref.getString("runList", "");
 
-        Type listType = new TypeToken<List<Run>>() {}.getType();
-        ArrayList<Run> saveData = new Gson().fromJson(GsonSaveString,  listType);
-        if(saveData != null)
-            runArrayList = saveData;
+        Type listType = new TypeToken<List<SimpleRun>>() {}.getType();
+
+
+        /*RunDeserializer deserializer = new RunDeserializer("type");
+        deserializer.registerBarnType("SimpleRun", SimpleRun.class);
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Run.class, deserializer)
+                .create();
+
+        List<Run> outList = gson.fromJson(GsonSaveString, listType);
+
+        if(outList != null)
+            runArrayList = (ArrayList<Run>) outList;
         else
-            runArrayList = new ArrayList<>();
+            runArrayList = new ArrayList<Run>();*/
+
+        List<SimpleRun> outList = new Gson().fromJson(GsonSaveString, listType);
+
+        runArrayList = new ArrayList<>();
+        if(outList != null)
+        {
+            for(SimpleRun run : outList)
+            {
+                runArrayList.add(run);
+            }
+        }
+
     }
 }
