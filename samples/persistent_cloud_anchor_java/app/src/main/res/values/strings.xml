@@ -46,10 +46,10 @@
   <string name="camera_unavailable">Camera unavailable. Try restarting the app.</string>
 
   <!-- Strings used in hosting flow-->
-  <string name="hosting_place_anchor">Tap to place an object.</string>
+  <string name="hosting_place_anchor">Select your zone of interest.</string>
   <string name="hosting_save">To save this location, walk around the object to capture it from different angles</string>
   <string name="hosting_processing">Processing...</string>
-  <string name="hosting_success">Finished!</string>
+  <string name="hosting_success">You location has been scanned successfully!</string>
   <string name="hosting_error">Hosting Error: %1$s</string>
   <string name="debug_hosting_place_anchor">Tap a vertical or horizontal plane...</string>
   <string name="debug_hosting_save">Average Mapping Quality: %1$s\nNote: Horizontal and vertical planes have slightly
@@ -65,8 +65,8 @@
   <string name="too_far">You are too far; come closer</string>
 
   <!-- Strings used in the resolving flow-->
-  <string name="resolving_processing">Look at the location you expect the AR experience to appear.</string>
-  <string name="resolving_success">Resolve success!</string>
+  <string name="resolving_processing">Point your phone at the location you are looking for.</string>
+  <string name="resolving_success">Location found!</string>
   <string name="resolving_error">Resolving Error: %1$s</string>
   <string name="debug_resolving_processing">Attempting to resolve %1$d anchors...</string>
   <string name="debug_resolving_success">Resolved anchors; continuing to refine pose.</string>

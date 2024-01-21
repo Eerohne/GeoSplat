@@ -19,6 +19,7 @@
     package="com.google.ar.core.examples.java.persistentcloudanchor">
 
   <uses-permission android:name="android.permission.CAMERA"/>
+  <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
   <uses-permission android:name="android.permission.INTERNET" />
 
@@ -65,5 +66,8 @@
     </activity>
     <!-- Indicates whether "Google Play Services for AR" (ARCore) is "required" or "optional". -->
     <meta-data android:name="com.google.ar.core" android:value="required" />
+    <meta-data
+        android:name="com.google.android.ar.API_KEY"
+        android:value="AIzaSyAIJkomFTk7d3Ic6xpYneWPWJ2ZxyUNwPY"/>
   </application>
 </manifest>

@@ -1,16 +1,50 @@
-# Android Studio configuration.
 *.iml
-.idea/
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
 
-# Gradle configuration.
+# Gradle files
 .gradle/
 build/
 
-# User configuration.
+# Local configuration file (sdk path, etc)
 local.properties
+secrets.properties
 
-# OS configurations.
-.DS_Store
+# Log/OS Files
+*.log
 
-# Android NDK cmake output.
+# Android Studio generated files and folders
+captures/
+.externalNativeBuild/
 .cxx/
+*.apk
+output.json
+
+# IntelliJ
+*.iml
+.idea/
+misc.xml
+deploymentTargetDropDown.xml
+render.experimental.xml
+
+# Keystore files
+*.jks
+*.keystore
+
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+
+# Android Profiling
+*.hprof

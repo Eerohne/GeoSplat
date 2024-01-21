@@ -29,9 +29,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.ArCoreApk.Availability;
@@ -90,10 +93,14 @@ import java.util.List;
  */
 public class HelloArActivity extends AppCompatActivity implements SampleRender.Renderer {
 
+
+  private static int myCounter = 0;
   private static final String TAG = HelloArActivity.class.getSimpleName();
 
-  private static final String SEARCHING_PLANE_MESSAGE = "Searching for surfaces...";
+  private static final String SEARCHING_PLANE_MESSAGE = "Scan the feature with your phone.";
   private static final String WAITING_FOR_TAP_MESSAGE = "Tap on a surface to place an object.";
+
+  private static final String FOUND_FEATURE_MESSAGE = "Tap on a surface to place an object.";
 
   // See the definition of updateSphericalHarmonicsCoefficients for an explanation of these
   // constants.
@@ -206,6 +213,27 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
             popup.show();
           }
         });
+
+
+    FloatingActionButton myButton = findViewById(R.id.my_button);
+    myButton.setOnClickListener(
+            new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+
+
+                TextView myText = findViewById(R.id.my_text2);
+
+                if(myText.getText().equals("A"))
+                {
+                  myText.setText("B");
+                }
+                else
+                {
+                  myText.setText("A");
+                }
+              }
+            });
   }
 
   /** Menu button to launch feature specific settings. */
@@ -218,6 +246,11 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
       return true;
     }
     return false;
+  }
+
+  public void helloButton(View v)
+  {
+
   }
 
   @Override
@@ -346,6 +379,12 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
 
   @Override
   public void onSurfaceCreated(SampleRender render) {
+
+    //MYCODE
+    //messageSnackbarHelper.showError(this, "FOUND SURFACE");
+    //TextView myText2 = findViewById(R.id.my_text2);
+    //myText2.setText("FOUND: " + session.getAllTrackables(Plane.class).size() + " -> " + myCounter++);
+
     // Prepare the rendering objects. This involves reading shaders and 3D model files, so may throw
     // an IOException.
     try {
@@ -451,6 +490,12 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
 
   @Override
   public void onSurfaceChanged(SampleRender render, int width, int height) {
+
+    //MYCODE
+    //messageSnackbarHelper.showError(this, "FOUND CHANGED!!!");
+    //TextView myText2 = findViewById(R.id.my_text2);
+    //myText2.setText("CHANGED: " + session.getAllTrackables(Plane.class).size() + " -> " + myCounter++);
+
     displayRotationHelper.onSurfaceChanged(width, height);
     virtualSceneFramebuffer.resize(width, height);
   }
@@ -519,6 +564,16 @@ public class HelloArActivity extends AppCompatActivity implements SampleRender.R
 
     // Keep the screen unlocked while tracking, but allow it to lock when tracking stops.
     trackingStateHelper.updateKeepScreenOnFlag(camera.getTrackingState());
+
+    //MYCODE
+    TextView myText = findViewById(R.id.my_text);
+    myText.setText(camera.getTrackingState().name());
+
+    int trackNum = session.getAllTrackables(Plane.class).size();
+    int anchorNum = session.getAllAnchors().size();
+
+    TextView myText2 = findViewById(R.id.my_text2);
+    myText2.setText("Planes: " + trackNum + "\n" + "Anchors: " + anchorNum);
 
     // Show a message based on whether tracking has failed, if planes are detected, and if the user
     // has placed any objects.

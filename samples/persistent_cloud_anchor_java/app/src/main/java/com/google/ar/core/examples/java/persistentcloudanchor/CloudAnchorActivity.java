@@ -19,9 +19,12 @@ package com.google.ar.core.examples.java.persistentcloudanchor;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.opengl.Visibility;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -33,6 +36,8 @@ import android.widget.Toast;
 import androidx.annotation.GuardedBy;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.Anchor.CloudAnchorState;
 import com.google.ar.core.ArCoreApk;
@@ -62,7 +67,11 @@ import com.google.ar.core.exceptions.UnavailableApkTooOldException;
 import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.common.base.Preconditions;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -89,6 +98,10 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
   protected static final String HOSTED_ANCHOR_MINUTES = "anchor_minutes";
   protected static final double MIN_DISTANCE = 0.2f;
   protected static final double MAX_DISTANCE = 10.0f;
+
+  private int mWidth;
+  private int mHeight;
+  private boolean capturePicture = false;
 
   static Intent newHostingIntent(Context packageContext) {
     Intent intent = new Intent(packageContext, CloudAnchorActivity.class);
@@ -139,7 +152,7 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
 
   // Feature Map Quality Indicator UI
   private FeatureMapQualityUi featureMapQualityUi;
-  private static final float QUALITY_THRESHOLD = 0.6f;
+  private static final float QUALITY_THRESHOLD = 0.07f;
   private Pose anchorPose;
   private boolean hostedAnchor;
   private long lastEstimateTimestampMillis;
@@ -160,6 +173,8 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
 
   private CloudAnchorManager cloudAnchorManager;
   private HostResolveMode currentMode;
+
+  private static boolean acceptScan = false;
 
   private static void saveAnchorToStorage(
       String anchorId, String anchorNickname, SharedPreferences anchorPreferences) {
@@ -198,6 +213,9 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
 
     // Initialize UI components.
     debugText = findViewById(R.id.debug_message);
+    //MYCODE
+    debugText.setVisibility(View.INVISIBLE);
+
     userMessageText = findViewById(R.id.user_message);
 
     // Initialize Cloud Anchor variables.
@@ -207,6 +225,16 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
       currentMode = HostResolveMode.RESOLVING;
     }
     showPrivacyDialog();
+
+    //MYCODE
+    acceptScan = false;
+    FloatingActionButton acceptScanButton = findViewById(R.id.acceptScan_button);
+    acceptScanButton.setOnClickListener((View) ->
+    {
+      acceptScan = true;
+    });
+
+
   }
 
   private void setUpTapListener() {
@@ -450,6 +478,9 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
   public void onSurfaceChanged(GL10 gl, int width, int height) {
     displayRotationHelper.onSurfaceChanged(width, height);
     GLES20.glViewport(0, 0, width, height);
+    //MYCODE
+    mWidth = width;
+    mHeight = height;
   }
 
   @Override
@@ -547,6 +578,74 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
       // Avoid crashing the application due to unhandled exceptions.
       Log.e(TAG, "Exception on the OpenGL thread", t);
     }
+
+    //MYCODE
+    if (capturePicture) {
+      capturePicture = false;
+      try {
+        SavePicture();
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+  }
+
+  public void onSavePicture(View view) {
+    // Here just a set a flag so we can copy
+    // the image from the onDrawFrame() method.
+    // This is required for OpenGL so we are on the rendering thread.
+    this.capturePicture = true;
+  }
+
+  /**
+   * Call from the GLThread to save a picture of the current frame.
+   */
+  public void SavePicture() throws IOException {
+    int pixelData[] = new int[mWidth * mHeight];
+
+    // Read the pixels from the current GL frame.
+    IntBuffer buf = IntBuffer.wrap(pixelData);
+    buf.position(0);
+    GLES20.glReadPixels(0, 0, mWidth, mHeight,
+            GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, buf);
+
+    // Create a file in the Pictures/HelloAR album.
+    final File out = new File(Environment.getExternalStoragePublicDirectory(
+            Environment.DIRECTORY_PICTURES) + "/HelloAR", "Img" +
+            Long.toHexString(System.currentTimeMillis()) + ".png");
+
+    // Make sure the directory exists
+    if (!out.getParentFile().exists()) {
+      out.getParentFile().mkdirs();
+    }
+
+    // Convert the pixel data from RGBA to what Android wants, ARGB.
+    int bitmapData[] = new int[pixelData.length];
+    for (int i = 0; i < mHeight; i++) {
+      for (int j = 0; j < mWidth; j++) {
+        int p = pixelData[i * mWidth + j];
+        int b = (p & 0x00ff0000) >> 16;
+        int r = (p & 0x000000ff) << 16;
+        int ga = p & 0xff00ff00;
+        bitmapData[(mHeight - i - 1) * mWidth + j] = ga | r | b;
+      }
+    }
+    // Create a bitmap.
+    Bitmap bmp = Bitmap.createBitmap(bitmapData,
+            mWidth, mHeight, Bitmap.Config.ARGB_8888);
+
+    // Write it to disk.
+    FileOutputStream fos = new FileOutputStream(out);
+    bmp.compress(Bitmap.CompressFormat.PNG, 100, fos);
+    fos.flush();
+    fos.close();
+    runOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        userMessageText.setText("Wrote " + out.getName());
+      }
+    });
   }
 
   private void updateFeatureMapQualityUi(Camera camera, float[] colorCorrectionRgba) {
@@ -583,7 +682,7 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
       float averageQuality = featureMapQualityUi.computeOverallQuality();
       Log.i(TAG, "History of average mapping quality calls: " + averageQuality);
 
-      if (averageQuality >= QUALITY_THRESHOLD) {
+      if (averageQuality >= QUALITY_THRESHOLD || acceptScan) {
         // Host the anchor automatically if the FeatureMapQuality threshold is reached.
         Log.i(TAG, "FeatureMapQuality has reached SUFFICIENT-GOOD, triggering hostCloudAnchor()");
         synchronized (anchorLock) {
@@ -659,6 +758,11 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
     }
   }
 
+  private void takePicture()
+  {
+    capturePicture = true;
+  }
+
   /* Listens for a resolved anchor. */
   private final class ResolveListener implements CloudAnchorManager.CloudAnchorResolveListener {
     @Override
@@ -669,6 +773,10 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
         return;
       }
       setAnchorAsResolved(cloudAnchorId, anchor);
+
+      //MYCODE
+      takePicture();
+
       userMessageText.setText(getString(R.string.resolving_success));
       synchronized (anchorLock) {
         if (unresolvedAnchorIds.isEmpty()) {
@@ -720,7 +828,12 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
     }
 
     private void saveAnchorWithNickname() {
-      if (cloudAnchorId == null) {
+
+      //MYCODE
+      TextView cloudIDText = findViewById(R.id.cloudID_text);
+      cloudIDText.setText("CLOUD ID: " + cloudAnchorId);
+
+      /*if (cloudAnchorId == null) {
         return;
       }
       HostDialogFragment hostDialogFragment = new HostDialogFragment();
@@ -730,7 +843,7 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
           "nickname", getString(R.string.nickname_default, getNumStoredAnchors(sharedPreferences)));
       hostDialogFragment.setOkListener(this::onAnchorNameEntered);
       hostDialogFragment.setArguments(args);
-      hostDialogFragment.show(getSupportFragmentManager(), "HostDialog");
+      hostDialogFragment.show(getSupportFragmentManager(), "HostDialog");*/
     }
   }
 
