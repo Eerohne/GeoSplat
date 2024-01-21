@@ -44,6 +44,9 @@ repositories {
 }
 
 dependencies {
+
+    api 'com.google.code.gson:gson:2.9.0'
+
     // ARCore (Google Play Services for AR) library.
     implementation 'com.google.ar:core:1.41.0'
 
