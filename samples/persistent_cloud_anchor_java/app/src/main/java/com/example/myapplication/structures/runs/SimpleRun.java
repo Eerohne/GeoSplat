@@ -1,11 +1,17 @@
 package com.example.myapplication.structures.runs;
 
 public class SimpleRun extends Run{
+
     public SimpleRun(String name, Difficulty difficulty, int duration, String desc){
         super.name = name;
         super.difficulty = difficulty;
         super.duration = duration;
         super.desc = desc;
+    }
+
+    public SimpleRun(String id, String name, String desc){
+        this(name, Difficulty.EASY, 0, desc);
+        super.id = id;
     }
 
     public SimpleRun(String name, Difficulty difficulty, int duration){

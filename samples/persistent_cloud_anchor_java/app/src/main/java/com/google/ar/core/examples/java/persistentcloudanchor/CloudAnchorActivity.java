@@ -37,6 +37,7 @@ import androidx.annotation.GuardedBy;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.myapplication.CreationActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.Anchor.CloudAnchorState;
@@ -109,7 +110,7 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
     return intent;
   }
 
-  static Intent newResolvingIntent(Context packageContext, ArrayList<String> anchorsToResolve) {
+  public static Intent newResolvingIntent(Context packageContext, ArrayList<String> anchorsToResolve) {
     Intent intent = new Intent(packageContext, CloudAnchorActivity.class);
     intent.putExtra(EXTRA_HOSTING_MODE, false);
     intent.putExtra(EXTRA_ANCHORS_TO_RESOLVE, anchorsToResolve);
@@ -832,6 +833,9 @@ public class CloudAnchorActivity extends AppCompatActivity implements GLSurfaceV
       //MYCODE
       TextView cloudIDText = findViewById(R.id.cloudID_text);
       cloudIDText.setText("CLOUD ID: " + cloudAnchorId);
+
+      CreationActivity.idCreation = cloudAnchorId;
+      finish();
 
       /*if (cloudAnchorId == null) {
         return;

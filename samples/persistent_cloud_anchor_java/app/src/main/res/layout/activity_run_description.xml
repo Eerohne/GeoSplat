@@ -10,16 +10,16 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="fill_parent"
-        android:layout_height="361dp"
+        android:layout_width="0dp"
+        android:layout_height="674dp"
         android:adjustViewBounds="true"
         android:alpha="0.4"
         android:scaleType="centerCrop"
+        android:src="@drawable/sloth"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/sloth" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/back_button"
@@ -36,8 +36,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="fill_parent"
-        android:layout_height="452dp"
+        android:layout_width="0dp"
+        android:layout_height="441dp"
         app:cardBackgroundColor="@color/grey"
         app:cardCornerRadius="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -60,34 +60,34 @@
                 android:gravity="center"
                 android:text="@string/run_name"
                 android:textColor="@color/white"
-                android:textSize="30sp"
+                android:textSize="40sp"
                 android:textStyle="bold" />
 
-            <EditText
+            <TextView
                 android:id="@+id/run_desc_view"
                 android:layout_width="match_parent"
                 android:layout_height="110dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
                 android:layout_marginTop="36dp"
+                android:layout_marginRight="5dp"
                 android:ems="10"
                 android:gravity="center_horizontal"
-                android:inputType="text"
                 android:text="@string/random_desc"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="italic" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="154dp">
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
             <Button
                 android:id="@+id/start_game_button"
                 android:layout_width="match_parent"
                 android:layout_height="92dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="100dp"
                 android:text="@string/start"
-                android:textSize="30sp"/>
+                android:textSize="30sp" />
+
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

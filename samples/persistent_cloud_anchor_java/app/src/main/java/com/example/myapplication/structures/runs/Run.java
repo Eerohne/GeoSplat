@@ -1,7 +1,11 @@
 package com.example.myapplication.structures.runs;
 
 public abstract class Run {
+    public static String SELECTED_RUN_NAME = null;
+
     public enum Difficulty{EASY, MEDIUM, HARD, IMPOSSIBLE}
+
+    public String id;
 
     protected String name;
     protected String desc;

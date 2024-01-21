@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
    Copyright 2020 Google LLC
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,10 +14,15 @@
    limitations under the License.
 -->
 <resources>
+  <string name="scan">Scan</string>
+  <string name="submit">Submit</string>
+  <string name="name">Name</string>
+  <string name="desc">Description</string>
+  <string name="creation">Create A Hunt!</string>
   <string name="app_name">GeoSplat</string>
   <string name="random_desc">Description</string>
   <string name="search">Search</string>
-  <string name="username">User Name</string>
+  <string name="username">Welcome Back User!</string>
   <string name="coin_count">9999</string>
 
   <string name="run_name">Sample Run</string>

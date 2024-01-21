@@ -26,7 +26,10 @@
             android:layout_margin="10dp"
             android:contentDescription="@string/app_name"
             android:padding="5dp"
-            android:src="@drawable/profilepic" />
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/sloth"
+            />
 
         <!-- Text View to display Run Name -->
         <TextView

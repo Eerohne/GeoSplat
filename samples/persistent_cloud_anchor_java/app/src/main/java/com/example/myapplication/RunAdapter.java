@@ -61,13 +61,15 @@ public class RunAdapter extends RecyclerView.Adapter<RunAdapter.ViewHolder> {
                 if (event.getAction() == MotionEvent.ACTION_DOWN){
                     v.setBackgroundColor(Color.parseColor("#FFAFFF"));
 
-                    Intent intent = new Intent(viewContext, RunDescriptionActivity.class);
-                    viewContext.startActivity(intent);
-
                     Log.d("Pressed", "Button pressed");
                 }
                 else if (event.getAction() == MotionEvent.ACTION_UP){
                     v.setBackgroundColor(Color.parseColor("#FFFFFF"));
+
+                    Run.SELECTED_RUN_NAME = holder.runNameView.getText().toString();
+
+                    Intent intent = new Intent(viewContext, RunDescriptionActivity.class);
+                    viewContext.startActivity(intent);
                     Log.d("Released", "Button released");
                 }
                 return false;

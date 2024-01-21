@@ -5,13 +5,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
 
 import com.example.myapplication.structures.runs.Run;
 import com.example.myapplication.structures.runs.SimpleRun;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.ar.core.examples.java.persistentcloudanchor.R;
 import com.google.gson.Gson;
@@ -24,7 +28,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView runCardPanel;
-    ArrayList<Run> runArrayList;
+    public static ArrayList<Run> runArrayList;
 
     public static final String PREF = "PREF";
     private static final String KEY = "KEY_DATA";
@@ -38,8 +42,19 @@ public class MainActivity extends AppCompatActivity {
         //loadSaveFile();
 
         runCardPanel = findViewById(R.id.game_cards_panel);
+        FloatingActionButton createRunButton = findViewById(R.id.create_run_button);
+
+        createRunButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, CreationActivity.class);
+                startActivity(intent);
+            }
+        });
 
         initializeSearchFunction();
+
+
 
         // Test the pane
         runArrayList = new ArrayList<>();
@@ -79,15 +94,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 ArrayList<Run> newRunList = new ArrayList<>();
-                if(!s.toString().isEmpty()){
+                if(s.toString().equals("clear")){
+                    runArrayList.clear();
+                }
+                else if(!s.toString().isEmpty()){
                     for (Run r : runArrayList) {
                         if(r.getName().toLowerCase().contains(s.toString().trim().toLowerCase()) || r.getDesc().toLowerCase().contains(s.toString().trim().toLowerCase()))
                             newRunList.add(r);
                     }
                 }
                 else newRunList = runArrayList;
-
-                //Log.d("test", "aaaaaaa");
 
                 RunAdapter newRunAdapter = new RunAdapter(MainActivity.this, newRunList);
                 runCardPanel.setAdapter(newRunAdapter);
@@ -101,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
     public void storeSaveFile()
     {
         String convertedData = new Gson().toJson(runArrayList); // converted to string.
+
         SharedPreferences userDetails = this.getSharedPreferences("runDetails", MODE_PRIVATE);
         SharedPreferences.Editor edit = userDetails.edit();
 
